@@ -52,6 +52,15 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromHours(12);
 });
 
+// Persist Data Protection keys on deployed servers so antiforgery tokens and auth
+// cookies keep working across restarts and redeploys (fixes random 500s on form POSTs).
+if (!builder.Environment.IsDevelopment())
+{
+    var keysPath = Path.Combine(builder.Environment.ContentRootPath, "App_Data", "keys");
+    builder.Services.AddDataProtection()
+        .PersistKeysToFileSystem(new DirectoryInfo(keysPath));
+}
+
 var app = builder.Build();
 
 // Apply the database schema and seed initial data.
