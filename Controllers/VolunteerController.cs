@@ -2,16 +2,19 @@ using GiftOfTheGivers.Data;
 using GiftOfTheGivers.Models;
 using GiftOfTheGivers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GiftOfTheGivers.Controllers
 {
     public class VolunteerController : Controller
     {
         private readonly AppDbContext _db;
+        private readonly ILogger<VolunteerController> _logger;
 
-        public VolunteerController(AppDbContext db)
+        public VolunteerController(AppDbContext db, ILogger<VolunteerController> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -41,7 +44,20 @@ namespace GiftOfTheGivers.Controllers
             };
 
             _db.Volunteers.Add(volunteer);
-            await _db.SaveChangesAsync();
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                // Never show visitors the raw error page - log it and explain gracefully.
+                _logger.LogError(ex, "Failed to save volunteer registration for {Email}.", volunteer.Email);
+                ModelState.AddModelError(string.Empty,
+                    "We could not save your registration right now. Please try again in a few minutes. " +
+                    "If the problem continues, please email your details to volunteers@gotg.org.");
+                return View(model);
+            }
 
             TempData["Success"] =
                 $"Thank you, {volunteer.FullName}! Your volunteer registration has been received. " +
