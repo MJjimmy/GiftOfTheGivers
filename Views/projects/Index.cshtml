@@ -1,0 +1,158 @@
+@model List<GiftOfTheGivers.Models.Project>
+@{
+    ViewData["Title"] = "Relief Projects";
+}
+
+<!-- PAGE HEADER -->
+<section class="projects-header">
+
+    <div class="container text-center">
+
+        <span class="section-label">
+            OUR HUMANITARIAN WORK
+        </span>
+
+        <h1>
+            Relief Projects
+        </h1>
+
+        <p>
+            Explore ongoing humanitarian projects and discover
+            how communities are receiving support.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- PROJECTS -->
+<section class="projects-list-section">
+
+    <div class="container">
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <h3>No projects yet</h3>
+                <p class="text-muted">Relief projects will appear here once they are added.</p>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+
+                @foreach (var project in Model)
+                {
+                    <div class="col-lg-4 col-md-6">
+
+                        <div class="project-card">
+
+                            <div class="project-image">
+
+                                <img src="@project.ImageUrl"
+                                     alt="@project.Title">
+
+                                <span class="project-status">
+                                    @project.Status
+                                </span>
+
+                            </div>
+
+                            <div class="project-content">
+
+                                <small>
+                                    <i class="bi bi-geo-alt"></i>
+                                    @project.Location
+                                </small>
+
+                                <h4>
+                                    @project.Title
+                                </h4>
+
+                                <p>
+                                    @project.Summary
+                                </p>
+
+                                <div class="project-progress">
+
+                                    <div class="progress">
+
+                                        <div class="progress-bar"
+                                             style="width: @project.ProgressPercent%;">
+                                        </div>
+
+                                    </div>
+
+                                    <small>
+                                        Project progress: @project.ProgressPercent%
+                                    </small>
+
+                                </div>
+
+                                <a asp-controller="Projects"
+                                   asp-action="Details"
+                                   asp-route-id="@project.Id"
+                                   class="project-link">
+
+                                    View Project
+                                    <i class="bi bi-arrow-right"></i>
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+
+    </div>
+
+</section>
+
+
+<!-- PROJECT CTA -->
+<section class="projects-cta">
+
+    <div class="container text-center">
+
+        <h2>
+            Want to Support a Relief Project?
+        </h2>
+
+        <p>
+            Your donation or volunteer contribution can help
+            humanitarian teams continue their work.
+        </p>
+
+        <div class="mt-4">
+
+            <a asp-controller="Donation"
+               asp-action="Index"
+               class="btn btn-primary-custom">
+
+                <i class="bi bi-heart-fill me-2"></i>
+
+                Donate Now
+
+            </a>
+
+            <a asp-controller="Volunteer"
+               asp-action="Index"
+               class="btn btn-outline-custom">
+
+                <i class="bi bi-people-fill me-2"></i>
+
+                Become a Volunteer
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>

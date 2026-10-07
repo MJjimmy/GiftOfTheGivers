@@ -1,0 +1,257 @@
+@model GiftOfTheGivers.Models.Project
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<!-- PROJECT DETAILS HEADER -->
+<section class="project-details-header">
+
+    <div class="container">
+
+        <a asp-controller="Projects"
+           asp-action="Index"
+           class="back-link">
+
+            <i class="bi bi-arrow-left me-2"></i>
+            Back to Relief Projects
+
+        </a>
+
+        <div class="row align-items-center mt-4">
+
+            <div class="col-lg-7">
+
+                <span class="project-status-large">
+                    @(Model.Status?.ToUpperInvariant()) PROJECT
+                </span>
+
+                <h1>
+                    @Model.Title
+                </h1>
+
+                <p class="project-location">
+
+                    <i class="bi bi-geo-alt-fill me-2"></i>
+
+                    @Model.Location
+
+                </p>
+
+            </div>
+
+            <div class="col-lg-5">
+
+                <img src="@Model.ImageUrl"
+                     alt="@Model.Title"
+                     class="project-details-image">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- PROJECT INFORMATION -->
+<section class="project-information">
+
+    <div class="container">
+
+        <div class="row g-5">
+
+            <!-- MAIN CONTENT -->
+            <div class="col-lg-8">
+
+                <span class="section-label">
+                    ABOUT THIS PROJECT
+                </span>
+
+                <h2>
+                    @Model.Category
+                </h2>
+
+                <p>
+                    @Model.Description
+                </p>
+
+                @if (Model.Objectives.Any())
+                {
+                    <!-- PROJECT OBJECTIVES -->
+
+                    <h3 class="details-heading">
+                        Project Objectives
+                    </h3>
+
+                    <div class="objective-list">
+
+                        @foreach (var objective in Model.Objectives)
+                        {
+                            <div class="objective-item">
+
+                                <i class="bi bi-check-circle-fill"></i>
+
+                                <span>
+                                    @objective
+                                </span>
+
+                            </div>
+                        }
+
+                    </div>
+                }
+
+                @if (Model.Updates.Any())
+                {
+                    <!-- LATEST UPDATES -->
+
+                    <h3 class="details-heading">
+                        Latest Project Updates
+                    </h3>
+
+                    @foreach (var update in Model.Updates.Take(3))
+                    {
+                        <div class="update-card">
+
+                            <div class="update-header">
+
+                                <div>
+
+                                    <strong>
+                                        @update.Title
+                                    </strong>
+
+                                    <small>
+                                        Posted by @update.PostedBy
+                                    </small>
+
+                                </div>
+
+                                <span>
+                                    @update.CreatedAt.ToString("dd MMM yyyy")
+                                </span>
+
+                            </div>
+
+                            <p>
+                                @update.Body
+                            </p>
+
+                        </div>
+                    }
+                }
+
+            </div>
+
+
+            <!-- SIDEBAR -->
+            <div class="col-lg-4">
+
+                <div class="project-sidebar">
+
+                    <h4>
+                        Project Progress
+                    </h4>
+
+                    <div class="progress project-details-progress">
+
+                        <div class="progress-bar"
+                             style="width: @Model.ProgressPercent%;">
+                        </div>
+
+                    </div>
+
+                    <div class="progress-info">
+
+                        <strong>
+                            @Model.ProgressPercent%
+                        </strong>
+
+                        <span>
+                            Completed
+                        </span>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <div class="project-stat">
+
+                        <i class="bi bi-people-fill"></i>
+
+                        <div>
+
+                            <strong>
+                                @Model.VolunteerCount
+                            </strong>
+
+                            <span>
+                                Volunteers
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="project-stat">
+
+                        <i class="bi bi-box-seam-fill"></i>
+
+                        <div>
+
+                            <strong>
+                                @Model.ReliefPackagesDelivered.ToString("N0")+
+                            </strong>
+
+                            <span>
+                                Relief Packages
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="project-stat">
+
+                        <i class="bi bi-calendar-event"></i>
+
+                        <div>
+
+                            <strong>
+                                @Model.StartDate.ToString("MMMM yyyy")
+                            </strong>
+
+                            <span>
+                                Started
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <a asp-controller="Donation"
+                       asp-action="Checkout"
+                       asp-route-project="@Model.Id"
+                       class="btn btn-primary-custom w-100 mt-4">
+
+                        <i class="bi bi-heart-fill me-2"></i>
+
+                        Support This Project
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

@@ -1,0 +1,474 @@
+@model GiftOfTheGivers.ViewModels.EmployeeDashboardViewModel
+@{
+    ViewData["Title"] = "Employee Dashboard";
+
+    var currencySymbols = new Dictionary<string, string> { ["ZAR"] = "R", ["USD"] = "$", ["EUR"] = "\u20AC" };
+}
+
+<section class="employee-dashboard">
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="dashboard-header">
+
+            <div>
+                <span class="section-label">
+                    EMPLOYEE PORTAL
+                </span>
+
+                <h1>Employee Dashboard</h1>
+
+                <p>
+                    Manage relief projects, project updates and
+                    volunteer registrations.
+                </p>
+            </div>
+
+            <div class="dashboard-user">
+                <i class="bi bi-person-circle"></i>
+
+                <div>
+                    <strong>@(User.Identity?.Name ?? "Employee")</strong>
+                    <small>Employee</small>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- STATISTICS -->
+        <div class="row g-4 mb-5">
+
+            <div class="col-md-3 col-6">
+
+                <div class="dashboard-stat">
+
+                    <div class="stat-icon">
+                        <i class="bi bi-folder-fill"></i>
+                    </div>
+
+                    <div>
+                        <span>Active Projects</span>
+                        <h3>@Model.ActiveProjects</h3>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-3 col-6">
+
+                <div class="dashboard-stat">
+
+                    <div class="stat-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <div>
+                        <span>Volunteers</span>
+                        <h3>@Model.VolunteerCount</h3>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-3 col-6">
+
+                <div class="dashboard-stat">
+
+                    <div class="stat-icon">
+                        <i class="bi bi-megaphone-fill"></i>
+                    </div>
+
+                    <div>
+                        <span>Project Updates</span>
+                        <h3>@Model.UpdateCount</h3>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-3 col-6">
+
+                <div class="dashboard-stat">
+
+                    <div class="stat-icon">
+                        <i class="bi bi-heart-fill"></i>
+                    </div>
+
+                    <div>
+                        <span>Donations</span>
+                        <h3>@Model.DonationCount</h3>
+                        <small>R @Model.TotalDonated.ToString("N2")</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUICK ACTIONS -->
+        <div class="dashboard-section-header">
+
+            <div>
+                <span class="section-label">
+                    QUICK ACTIONS
+                </span>
+
+                <h2>Manage Relief Operations</h2>
+            </div>
+
+        </div>
+
+
+        <div class="row g-4 mb-5">
+
+            <!-- PROJECTS -->
+
+            <div class="col-md-4">
+
+                <div class="dashboard-action-card">
+
+                    <div class="action-icon">
+                        <i class="bi bi-folder2-open"></i>
+                    </div>
+
+                    <h4>Relief Projects</h4>
+
+                    <p>
+                        View and manage ongoing humanitarian
+                        relief projects.
+                    </p>
+
+                    <a asp-controller="Projects"
+                       asp-action="Index"
+                       class="dashboard-action-link">
+
+                        View Projects
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- UPDATES -->
+
+            <div class="col-md-4">
+
+                <div class="dashboard-action-card">
+
+                    <div class="action-icon">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+
+                    <h4>Post Project Update</h4>
+
+                    <p>
+                        Share progress updates about ongoing
+                        relief projects.
+                    </p>
+
+                    <a asp-controller="Employee"
+                       asp-action="PostUpdate"
+                       class="dashboard-action-link">
+
+                        Post Update
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- VOLUNTEERS -->
+
+            <div class="col-md-4">
+
+                <div class="dashboard-action-card">
+
+                    <div class="action-icon">
+                        <i class="bi bi-person-lines-fill"></i>
+                    </div>
+
+                    <h4>Volunteer Sign-ups</h4>
+
+                    <p>
+                        View people who have registered their
+                        interest in volunteering.
+                    </p>
+
+                    <a asp-controller="Employee"
+                       asp-action="Volunteers"
+                       class="dashboard-action-link">
+
+                        View Volunteers
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RECENT DONATIONS -->
+
+        <div class="dashboard-section-header">
+
+            <div>
+
+                <span class="section-label">
+                    LATEST SUPPORT
+                </span>
+
+                <h2>Recent Donations</h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="volunteer-table-card mb-5">
+
+            <div class="table-responsive">
+
+                <table class="table volunteer-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Reference</th>
+                            <th>Donor</th>
+                            <th>Project</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model.RecentDonations.Any())
+                        {
+                            @foreach (var donation in Model.RecentDonations)
+                            {
+                                var symbol = currencySymbols.GetValueOrDefault(donation.Currency, "R");
+                                var donor = donation.IsAnonymous || string.IsNullOrWhiteSpace(donation.DonorName)
+                                    ? "Anonymous"
+                                    : donation.DonorName;
+
+                                <tr>
+
+                                    <td>
+                                        <strong>@donation.Reference</strong>
+                                    </td>
+
+                                    <td>@donor</td>
+
+                                    <td>@(donation.Project?.Title ?? "General Relief Fund")</td>
+
+                                    <td>@symbol@donation.Amount.ToString("N2")</td>
+
+                                    <td>@donation.CreatedAt.ToString("dd MMM yyyy")</td>
+
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    No donations received yet.
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- RECENT VOLUNTEER SIGN-UPS -->
+
+        <div class="dashboard-section-header">
+
+            <div>
+
+                <span class="section-label">
+                    NEW REGISTRATIONS
+                </span>
+
+                <h2>Recent Volunteer Sign-ups</h2>
+
+            </div>
+
+            <a asp-controller="Employee"
+               asp-action="Volunteers"
+               class="dashboard-view-all">
+
+                View All
+
+            </a>
+
+        </div>
+
+
+        <div class="volunteer-table-card mb-5">
+
+            <div class="table-responsive">
+
+                <table class="table volunteer-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Name</th>
+                            <th>Area of Interest</th>
+                            <th>Availability</th>
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model.RecentVolunteers.Any())
+                        {
+                            @foreach (var volunteer in Model.RecentVolunteers)
+                            {
+                                <tr>
+
+                                    <td>
+                                        <strong>@volunteer.FullName</strong>
+                                    </td>
+
+                                    <td>@(volunteer.AreaOfInterest ?? "-")</td>
+
+                                    <td>@volunteer.Availability</td>
+
+                                    <td>
+                                        <span class="volunteer-status">
+                                            @volunteer.Status
+                                        </span>
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    No volunteer registrations yet.
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- ONGOING PROJECTS -->
+
+        <div class="dashboard-section-header">
+
+            <div>
+
+                <span class="section-label">
+                    RECENT ACTIVITY
+                </span>
+
+                <h2>Ongoing Relief Projects</h2>
+
+            </div>
+
+            <a asp-controller="Projects"
+               asp-action="Index"
+               class="dashboard-view-all">
+
+                View All
+
+            </a>
+
+        </div>
+
+
+        <div class="dashboard-projects">
+
+            @foreach (var project in Model.OngoingProjects)
+            {
+
+                <div class="dashboard-project">
+
+                    <div class="project-status">
+                        @project.Status
+                    </div>
+
+                    <div class="project-content">
+
+                        <h4>
+                            @project.Title
+                        </h4>
+
+                        <p>
+                            @project.Summary
+                        </p>
+
+                        <div class="project-progress">
+
+                            <div class="progress-info">
+
+                                <span>Progress</span>
+                                <strong>@project.ProgressPercent%</strong>
+
+                            </div>
+
+                            <div class="progress">
+
+                                <div class="progress-bar"
+                                     style="width: @(project.ProgressPercent)%">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            }
+
+        </div>
+
+    </div>
+
+</section>

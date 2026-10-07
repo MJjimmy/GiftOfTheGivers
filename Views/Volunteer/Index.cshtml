@@ -1,0 +1,379 @@
+@model GiftOfTheGivers.ViewModels.VolunteerSignupViewModel
+@{
+    ViewData["Title"] = "Volunteer";
+}
+
+<!-- VOLUNTEER HERO -->
+<section class="volunteer-hero">
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-7">
+
+                <span class="hero-label">
+                    JOIN THE RELIEF EFFORT
+                </span>
+
+                <h1>
+                    Give Your Time.
+                    <span>Make a Difference.</span>
+                </h1>
+
+                <p>
+                    Volunteers play an important role in supporting
+                    humanitarian relief projects. Register your interest
+                    and let us know how you can help.
+                </p>
+
+            </div>
+
+            <div class="col-lg-5 text-center">
+
+                <div class="volunteer-icon">
+
+                    <i class="bi bi-people-fill"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- VOLUNTEER FORM -->
+<section class="volunteer-section">
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-8">
+
+                <div class="volunteer-form-card">
+
+                    <div class="text-center mb-4">
+
+                        <span class="section-label">
+                            VOLUNTEER REGISTRATION
+                        </span>
+
+                        <h2>
+                            Register Your Interest
+                        </h2>
+
+                        <p>
+                            Complete the form below and tell us how
+                            you would like to contribute.
+                        </p>
+
+                    </div>
+
+                    @if (TempData["Success"] is string successMessage)
+                    {
+                        <div class="alert alert-success d-flex align-items-center gap-2" role="alert">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            <div>
+                                @successMessage
+                            </div>
+
+                        </div>
+                    }
+
+                    <form asp-controller="Volunteer"
+                          asp-action="Index"
+                          method="post">
+
+                        <!-- NAME -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="FullName" class="form-label">
+                                Full Name
+                            </label>
+
+                            <input asp-for="FullName"
+                                   type="text"
+                                   class="form-control"
+                                   placeholder="Enter your full name">
+
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- EMAIL -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="Email" class="form-label">
+                                Email Address
+                            </label>
+
+                            <input asp-for="Email"
+                                   type="email"
+                                   class="form-control"
+                                   placeholder="Enter your email address">
+
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- PHONE -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="Phone" class="form-label">
+                                Phone Number
+                            </label>
+
+                            <input asp-for="Phone"
+                                   type="tel"
+                                   class="form-control"
+                                   placeholder="Enter your phone number">
+
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- SKILLS -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="Skills" class="form-label">
+                                Skills
+                            </label>
+
+                            <textarea asp-for="Skills"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="Tell us about your skills or experience"></textarea>
+
+                            <span asp-validation-for="Skills" class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- AVAILABILITY -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="Availability" class="form-label">
+                                Availability
+                            </label>
+
+                            <select asp-for="Availability" class="form-select">
+
+                                <option value="">
+                                    Select your availability
+                                </option>
+
+                                <option value="Weekdays">
+                                    Weekdays
+                                </option>
+
+                                <option value="Weekends">
+                                    Weekends
+                                </option>
+
+                                <option value="Both weekdays and weekends">
+                                    Both weekdays and weekends
+                                </option>
+
+                                <option value="Emergency response only">
+                                    Emergency response only
+                                </option>
+
+                            </select>
+
+                            <span asp-validation-for="Availability" class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- VOLUNTEER AREA -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="AreaOfInterest" class="form-label">
+                                Area of Interest
+                            </label>
+
+                            <select asp-for="AreaOfInterest" class="form-select">
+
+                                <option value="">
+                                    Select an area
+                                </option>
+
+                                <option value="Food Distribution">
+                                    Food Distribution
+                                </option>
+
+                                <option value="Medical Assistance">
+                                    Medical Assistance
+                                </option>
+
+                                <option value="Emergency Relief">
+                                    Emergency Relief
+                                </option>
+
+                                <option value="Community Support">
+                                    Community Support
+                                </option>
+
+                                <option value="Administration">
+                                    Administration
+                                </option>
+
+                            </select>
+
+                            <span asp-validation-for="AreaOfInterest" class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- AGREEMENT -->
+
+                        <div class="form-check mb-4">
+
+                            <input asp-for="Agreement"
+                                   class="form-check-input"
+                                   type="checkbox">
+
+                            <label asp-for="Agreement"
+                                   class="form-check-label">
+
+                                I agree to be contacted regarding
+                                volunteer opportunities.
+
+                            </label>
+
+                            <span asp-validation-for="Agreement" class="text-danger d-block"></span>
+
+                        </div>
+
+
+                        <!-- SUBMIT -->
+
+                        <button type="submit"
+                                class="btn btn-primary-custom w-100">
+
+                            <i class="bi bi-person-plus-fill me-2"></i>
+
+                            Register as a Volunteer
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- VOLUNTEER BENEFITS -->
+
+<section class="volunteer-benefits">
+
+    <div class="container">
+
+        <div class="section-heading text-center">
+
+            <span class="section-label">
+                WHY VOLUNTEER?
+            </span>
+
+            <h2>
+                Your Contribution Matters
+            </h2>
+
+        </div>
+
+
+        <div class="row g-4 mt-4">
+
+            <div class="col-md-4">
+
+                <div class="value-card">
+
+                    <i class="bi bi-heart-fill"></i>
+
+                    <h4>
+                        Help Communities
+                    </h4>
+
+                    <p>
+                        Support people and communities affected
+                        by emergencies and disasters.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="value-card">
+
+                    <i class="bi bi-people-fill"></i>
+
+                    <h4>
+                        Work Together
+                    </h4>
+
+                    <p>
+                        Become part of a community of people
+                        working together to create positive change.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="value-card">
+
+                    <i class="bi bi-stars"></i>
+
+                    <h4>
+                        Make an Impact
+                    </h4>
+
+                    <p>
+                        Use your skills, experience and time to
+                        contribute to meaningful humanitarian work.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+}

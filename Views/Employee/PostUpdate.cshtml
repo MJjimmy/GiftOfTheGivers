@@ -1,0 +1,195 @@
+@model GiftOfTheGivers.ViewModels.PostUpdateViewModel
+@{
+    ViewData["Title"] = "Post Project Update";
+}
+
+<section class="employee-dashboard">
+
+    <div class="container">
+
+        <div class="dashboard-header">
+
+            <div>
+                <span class="section-label">
+                    EMPLOYEE PORTAL
+                </span>
+
+                <h1>Post Project Update</h1>
+
+                <p>
+                    Share the latest progress on an ongoing
+                    relief project.
+                </p>
+            </div>
+
+            <div class="dashboard-user">
+                <i class="bi bi-person-circle"></i>
+
+                <div>
+                    <strong>@(User.Identity?.Name ?? "Employee")</strong>
+                    <small>Employee</small>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-8">
+
+                <div class="contact-form-card">
+
+                    <span class="section-label">
+                        PROJECT UPDATE
+                    </span>
+
+                    <h2>
+                        Update Relief Project
+                    </h2>
+
+                    @if (TempData["Success"] is string successMessage)
+                    {
+                        <div class="alert alert-success d-flex align-items-center gap-2" role="alert">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            <div>
+                                @successMessage
+                            </div>
+
+                        </div>
+                    }
+
+                    <form asp-controller="Employee"
+                          asp-action="PostUpdate"
+                          method="post">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <!-- PROJECT -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="ProjectId" class="form-label">
+                                Select Project
+                            </label>
+
+                            <select asp-for="ProjectId"
+                                    asp-items="ViewBag.Projects"
+                                    class="form-select">
+
+                                <option value="">
+                                    Select a relief project
+                                </option>
+
+                            </select>
+
+                            <span asp-validation-for="ProjectId" class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- UPDATE TITLE -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="Title" class="form-label">
+                                Update Title
+                            </label>
+
+                            <input asp-for="Title"
+                                   type="text"
+                                   class="form-control"
+                                   placeholder="Enter update title">
+
+                            <span asp-validation-for="Title" class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- PROGRESS -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="ProgressPercent" class="form-label">
+                                Project Progress (optional)
+                            </label>
+
+                            <input asp-for="ProgressPercent"
+                                   type="number"
+                                   class="form-control"
+                                   placeholder="Enter progress percentage"
+                                   min="0"
+                                   max="100">
+
+                            <span asp-validation-for="ProgressPercent" class="text-danger"></span>
+
+                            <div class="form-text">
+                                If provided, the project's progress bar will be updated to this percentage.
+                            </div>
+
+                        </div>
+
+
+                        <!-- UPDATE -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="Body" class="form-label">
+                                Update Description
+                            </label>
+
+                            <textarea asp-for="Body"
+                                      class="form-control"
+                                      rows="7"
+                                      placeholder="Describe the latest project progress..."></textarea>
+
+                            <span asp-validation-for="Body" class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- BUTTONS -->
+
+                        <div class="d-flex gap-3">
+
+                            <a asp-controller="Employee"
+                               asp-action="Dashboard"
+                               class="btn btn-outline-custom">
+
+                                <i class="bi bi-arrow-left me-2"></i>
+
+                                Cancel
+
+                            </a>
+
+
+                            <button type="submit"
+                                    class="btn btn-primary-custom">
+
+                                <i class="bi bi-send-fill me-2"></i>
+
+                                Post Update
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+}
